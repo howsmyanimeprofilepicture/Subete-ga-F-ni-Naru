@@ -38,19 +38,53 @@ class Just(Monad, Generic[T]):
     def __init__(self, val: T) -> None:
         super().__init__(val, None)
 
-    def map(self: Monad, func: Callable[[T], U]) -> Monad[U]:
+    def map(self: "Just", func: Callable[[T], U]) -> "Just[U]":
         return Just(func(self.val), None)
 
-    def bind(self: Monad, func: Callable[[T], Monad[U]]) -> Monad[U]:
+    def bind(self: "Just", func: Callable[[T], "Just[U]"]) -> "Just[U]":
         return func(self.val)
+
+
+class Writer(Monad, Generic[T]):
+    def __init__(self, val: T, meta: Any) -> None:
+        super().__init__(val, meta)
+
+    def map(self: "Writer[T]", func: Callable[[T], U]) -> "Writer[U]":
+        return Writer(func(self.val), self.meta)
+
+    def bind(self: "Writer[T]", func: Callable[[T], "Writer[U]"]) -> "Writer[U]":
+        new_writer: Writer[U] = func(self.val)
+        return Writer(new_writer.val, self.meta + new_writer.meta)
 
 
 class Nothing(Monad):
     def __init__(self) -> None:
         super().__init__(None, None)
 
-    def map(self: Monad, func: Callable[[T], U]) -> Monad[T]:
+    def map(self: "Nothing", func: Callable[[T], U]) -> "Nothing":
         return self
 
-    def bind(self: Monad, func: Callable[[T], Monad[U]]) -> Monad[T]:
+    def bind(self: "Nothing", func: Callable[[T], Monad[U]]) -> "Nothing":
         return self
+
+
+class Left(Monad):
+    def __init__(self, meta: Any) -> None:
+        super().__init__(val=None, meta=meta)
+
+    def map(self, func):
+        return self
+
+    def bind(self, func):
+        return self
+
+
+class Right(Monad, Generic[T]):
+    def __init__(self, val: T) -> None:
+        super().__init__(val, None)
+
+    def map(self: "Right", func: Callable[[T], U]) -> "Right[U]":
+        return Right(func(self.val))
+
+    def bind(self: "Right", func: Callable[[T], "Right[U]"]) -> "Right[U]":
+        return func(self.val)
