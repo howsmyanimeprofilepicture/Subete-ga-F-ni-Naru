@@ -16,6 +16,6 @@ setuptools.setup(
         "Bug Tracker": "https://github.com/howsmyanimeprofilepicture/Subete-ga-F-ni-Naru/issues"
     },
     license='MIT',
-    packages=['Subete-ga-F-ni-Naru'], 
+    packages=['subete_ga_F_ni_naru'], 
     install_requires=[],
 )
