@@ -1,9 +1,10 @@
-from typing import Callable
 import functools
 
+from typing import Callable, TypeVar
 
-class Sequential(Callable):
-    """implements a [composite function](https://en.wikipedia.org/wiki/Function_composition).
+
+class Sequential:
+    r"""implements a [composite function](https://en.wikipedia.org/wiki/Function_composition).
 
     .. math::
 
